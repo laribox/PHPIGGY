@@ -1,0 +1,17 @@
+# Ignore Composer files
+/vendor/
+/composer.phar
+/composer.lock
+
+# Ignore Composer-generated files
+/vendor/
+
+# Ignore environment configuration files
+.env
+
+# Ignore logs and other generated files
+/logs/
+/public/uploads/
+
+# Ignore sensitive or environment-specific files
+/config/config.php
