@@ -53,4 +53,13 @@ class App
   {
     $this->router->add('GET', $path, $controller);
   }
+
+  /**
+   * addMiddleware() is a method that adds a middleware to the router.  
+   */
+
+  public function addMiddleware(string $middleware)
+  {
+    $this->router->addMiddleware($middleware);
+  }
 }

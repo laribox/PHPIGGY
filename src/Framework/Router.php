@@ -10,6 +10,7 @@ namespace Framework;
 class Router
 {
   private array $routes = [];
+  private array $middlewares = [];
 
   /**
    * this function adds a route to the router
@@ -69,5 +70,18 @@ class Router
 
       $controllerInstance->$function();
     }
+  }
+  /**
+   * Adding a middleware to the router.
+   *
+   * This function adds a middleware to the router, which will be executed before the controller.
+   * The middleware will be executed in the order it is added.
+   *
+   * @param string $middleware
+   * @return void
+   */
+  public function addMiddleware(string $middleware)
+  {
+    $this->middlewares[] = $middleware;
   }
 }
