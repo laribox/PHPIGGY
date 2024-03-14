@@ -7,8 +7,14 @@ namespace App\Config;
 use App\Controllers\{HomeController, AboutController};
 use Framework\App;
 
+/**
+ * this function register all routes in the application.
+ *
+ * @param App $app
+ * @return void
+ */
 function registerRoutes(App $app)
 {
   $app->get("/", [HomeController::class, 'home']);
-  $app->get("/about", [AboutController::class, 'home']);
+  $app->get("/about", [AboutController::class, 'about']);
 }
