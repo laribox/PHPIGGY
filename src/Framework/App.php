@@ -54,6 +54,13 @@ class App
     $this->router->add('GET', $path, $controller);
   }
 
+  public function post(string $path, array $controller)
+  {
+
+    $this->router->add('POST', $path, $controller);
+  }
+
+
   /**
    * addMiddleware() is a method that adds a middleware to the router.  
    */
