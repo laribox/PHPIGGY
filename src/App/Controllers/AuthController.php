@@ -21,8 +21,6 @@ class AuthController
 
   public function register()
   {
-
     $this->validatorService->validateRegister($_POST);
-    echo $this->view->render('register.php', [...$_POST]);
   }
 }

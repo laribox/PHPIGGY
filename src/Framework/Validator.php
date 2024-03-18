@@ -5,53 +5,46 @@ declare(strict_types=1);
 namespace Framework;
 
 use Framework\Contracts\RuleInterface;
+use Framework\Exceptions\ValidationException;
 
-/**
- * this class is used to validate data against a set of rules.
- * it uses the RuleInterface interface to define the rules and their validation logic.
- * it can be used to validate data from a form, a database, or any other source.
- * it can also be used to validate data before saving it to a database.
- * it can be extended to add additional rules and validation logic.
- */
 class Validator
 {
   private array $rules = [];
 
-  /**
-   * this method adds a new rule to the validator.
-   *
-   * @param string $alias
-   * @param RuleInterface $rule
-   * @return void
-   */
   public function addRule(string $alias, RuleInterface $rule)
   {
     $this->rules[$alias] = $rule;
   }
 
-  /**
-   * this method validates the given data against the given rules.
-   *
-   * @param array $data
-   * @param array $fields
-   * @return void
-   */
-  public function validate(array $data, array $fields)
+  public function validate(array $formData, array $fields)
   {
     $errors = [];
+
     foreach ($fields as $fieldName => $rules) {
       foreach ($rules as $rule) {
+        $ruleParams = [];
+
+        if (str_contains($rule, ':')) {
+          [$rule, $ruleParams] = explode(':', $rule);
+          $ruleParams = explode(',', $ruleParams);
+        }
+
         $ruleValidator = $this->rules[$rule];
-        if ($ruleValidator->validate($data, $fieldName, [])) {
+
+        if ($ruleValidator->validate($formData, $fieldName, $ruleParams)) {
           continue;
         }
-        $errors[$fieldName][] = $ruleValidator->getMessage($data, $fieldName, []);
-        //echo "Validation failed for field $fieldName with rule $rule\n";
+
+        $errors[$fieldName][] = $ruleValidator->getMessage(
+          $formData,
+          $fieldName,
+          $ruleParams
+        );
       }
     }
 
-    if (count($errors) > 0) {
-      dd($errors);
+    if (count($errors)) {
+      throw new ValidationException($errors);
     }
   }
 }

@@ -8,14 +8,15 @@ use ReflectionClass, ReflectionNamedType;
 use Framework\Exceptions\ContainerException;
 
 
-
 /**
  * this class is used to manage class dependencies.
  * it has a private array called $definitions that stores the class definitions. 
  */
+
 class Container
 {
   private array $definitions = [];
+  private array $resolved = [];
 
   public function addDefinitions(array $newDefinitions)
   {
@@ -36,48 +37,63 @@ class Container
   public function resolve(string $className)
   {
     $reflectionClass = new ReflectionClass($className);
+
     if (!$reflectionClass->isInstantiable()) {
       throw new ContainerException("Class {$className} is not instantiable");
     }
+
     $constructor = $reflectionClass->getConstructor();
 
     if (!$constructor) {
       return new $className;
     }
 
-    $parameters = $constructor->getParameters();
-    if (count($parameters) === 0) {
+    $params = $constructor->getParameters();
+
+    if (count($params) === 0) {
       return new $className;
     }
+
     $dependencies = [];
-    foreach ($parameters as $parameter) {
-      $name = $parameter->getName();
-      $type = $parameter->getType();
+
+    foreach ($params as $param) {
+      $name = $param->getName();
+      $type = $param->getType();
+
       if (!$type) {
-        throw new ContainerException("failed to resolve class {$className} bacause parameter {$name} is missing a type hint. ");
+        throw new ContainerException("Failed to resolve class {$className} because param {$name} is missing a type hint.");
       }
+
       if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {
-        throw new ContainerException("failed to resolve class {$className} bacause invalid param name. ");
+        throw new ContainerException("Failed to resolve class {$className} because invalid param name.");
       }
+
       $dependencies[] = $this->get($type->getName());
     }
+
     return $reflectionClass->newInstanceArgs($dependencies);
   }
-
   /**
    * this function is used to get a class from the container.
    *
    * @param string $id
    * @return void
    */
+
   public function get(string $id)
   {
     if (!array_key_exists($id, $this->definitions)) {
       throw new ContainerException("Class {$id} does not exist in container.");
     }
 
+    if (array_key_exists($id, $this->resolved)) {
+      return $this->resolved[$id];
+    }
+
     $factory = $this->definitions[$id];
-    $dependency = $factory();
+    $dependency = $factory($this);
+
+    $this->resolved[$id] = $dependency;
 
     return $dependency;
   }

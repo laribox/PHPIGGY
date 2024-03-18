@@ -9,8 +9,13 @@ include "functions.php";
 
 use Framework\App;
 use App\Config\Paths;
+use Dotenv\Dotenv;
+
 
 use function App\Config\{registerRoutes, registerMiddleware};
+
+$dotEnv = Dotenv::createImmutable(Paths::ROOT);
+$dotEnv->load();
 
 $app = new App(Paths::SOURCE . "App/container-definitions.php");
 
