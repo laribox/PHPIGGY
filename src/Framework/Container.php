@@ -7,12 +7,6 @@ namespace Framework;
 use ReflectionClass, ReflectionNamedType;
 use Framework\Exceptions\ContainerException;
 
-
-/**
- * this class is used to manage class dependencies.
- * it has a private array called $definitions that stores the class definitions. 
- */
-
 class Container
 {
   private array $definitions = [];
@@ -22,17 +16,6 @@ class Container
   {
     $this->definitions = [...$this->definitions, ...$newDefinitions];
   }
-  /**
-   * this function is used to resolve class dependencies.
-   * it checks if the class has a constructor and if it does, it checks if the constructor has parameters.
-   * if it does, it checks if the parameters are of type ReflectionNamedType and if they are not of type ReflectionNamedType, it throws an exception.
-   * if the constructor has no parameters, it creates a new instance of the class.
-   * if the constructor has parameters, it creates a new instance of the class and passes the dependencies as arguments to the constructor.
-   * it returns the new instance of the class.
-   *
-   * @param string $className
-   * @return void
-   */
 
   public function resolve(string $className)
   {
@@ -73,12 +56,6 @@ class Container
 
     return $reflectionClass->newInstanceArgs($dependencies);
   }
-  /**
-   * this function is used to get a class from the container.
-   *
-   * @param string $id
-   * @return void
-   */
 
   public function get(string $id)
   {
