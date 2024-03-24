@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users(
   UNIQUE KEY(email)
 );
 
-/*CREATE TABLE IF NOT EXISTS transactions(
+CREATE TABLE IF NOT EXISTS transactions(
   id bigint(20) NOT NULL AUTO_INCREMENT,
   description varchar(255) NOT NULL,
   amount decimal(10,2) NOT NULL,
@@ -31,4 +31,4 @@ CREATE TABLE IF NOT EXISTS receipts(
   transaction_id bigint(20) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY(transaction_id) REFERENCES transactions (id) ON DELETE CASCADE
-);*/
+); 

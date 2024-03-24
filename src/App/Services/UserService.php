@@ -39,6 +39,9 @@ class UserService
         'url' => $data['socialMediaURL']
       ]
     );
+
+    session_regenerate_id();
+    $_SESSION['user'] = $this->db->id();
   }
 
   public function login(array $data)
@@ -67,5 +70,11 @@ class UserService
     if ($emailCount > 0) {
       throw new ValidationException(['email' => ['Email taken']]);
     }
+  }
+
+  public function logout()
+  {
+    unset($_SESSION['user']);
+    session_regenerate_id();
   }
 }

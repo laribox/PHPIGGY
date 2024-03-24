@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Framework\{TemplateEngine, Database, Container};
 use App\Config\Paths;
-use App\Services\{ValidatorService, UserService};
+use App\Services\{ReceiptService, TransactionService, ValidatorService, UserService};
 
 /**
  * this file contain the definitions for instantiation for dependency injection 
@@ -21,5 +21,13 @@ return [
   UserService::class => function (Container $container) {
     $db =  $container->get(Database::class);
     return new UserService($db);
+  },
+  TransactionService::class => function (Container $container) {
+    $db =  $container->get(Database::class);
+    return new TransactionService($db);
+  },
+  ReceiptService::class => function (Container $container) {
+    $db =  $container->get(Database::class);
+    return new ReceiptService($db);
   }
 ];
